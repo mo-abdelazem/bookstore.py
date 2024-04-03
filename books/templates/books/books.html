@@ -1,36 +1,52 @@
 {% extends 'index.html' %}
 {% load static %}
-
-{% block title %}
-Books home page
-{% endblock%}
-
-
+{% block title %} Books home page {% endblock%}
 {% block body %}
 
-{{static}}
 <div class="row g-0 justify-content-center">
-    {% for book in books %}
-    <div class="card mx-1 mt-3 p-0" style="width: 250px;">
-        <img src="{% static 'books/images/'|add:book.image %}" width="100" class="card-img-top" alt="...">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-baseline">
-                <p> {{book.name}}</p>
-                <p class="badge bg-primary">{{book.price}} $</p>
-            </div>
-            <div class="row">
-                <p> <strong>Pages no: </strong>{{book.pages}} </p>
-                <p><strong>Author: </strong> {{book.author}}</p>
-            </div>
-            <div class="d-flex justify-content-center gap-2">
-                <a href="{% url 'books.book' book.id%}" class="btn btn-light border"> <i
-                        class=" fa-solid fa-eye"></i></a>
-                <a class="btn btn-primary border"> <i class="fa-regular fa-pen-to-square"></i></a>
-                <a class="btn btn-danger border"> <i class=" fa-solid fa-xmark"></i></a>
-            </div>
-        </div>
+  {% for book in books %}
+  <div class="card mx-1 mt-3 p-0" style="width: 250px">
+    <img src="media/{{book.image}}" width="100" height="250" class="card-img-top object-fit-fill" alt="..." />
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-baseline">
+        <p>{{book.name}}</p>
+        <p class="badge bg-primary">{{book.price}} $</p>
+      </div>
+      <div class="row">
+        <p><strong>Pages: </strong>{{book.page_numbers}}</p>
+        <p><strong>Author: </strong> {{book.author}}</p>
+      </div>
+      <div class="d-flex justify-content-center mt-auto gap-2">
+        <a href="{{book.show_url}}" class="btn btn-light border">
+          <i class="fa-solid fa-eye"></i>
+        </a>
+        <a class="btn btn-primary border" href=" {% url 'books.update' book.id %}">
+          <i class="fa-regular fa-pen-to-square"></i>
+        </a>
+        <a data-bs-toggle="modal" data-bs-target="#deletebook{{ book.id }}" class="btn btn-danger border">
+          <i class="fa-solid fa-xmark"></i>
+        </a>
+      </div>
     </div>
-    {% endfor %}
-
+  </div>
+  <div class="modal" id="deletebook{{ book.id }}" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Are you sure to delete this book?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-footer">
+          <form method="POST" action="{{ book.delete_url }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Yes</button>
+          </form>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">NO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
+
 {% endblock %}

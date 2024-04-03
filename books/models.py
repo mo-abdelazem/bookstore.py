@@ -21,13 +21,11 @@ class Books(models.Model):
 
     @property
     def show_url(self):
-        pass
-        url = reverse("books.show", args=[self.id])
+        url = reverse("books.book", args=[self.id])
         return url
 
     @property
     def delete_url(self):
-        pass
         url = reverse("books.delete", args=[self.id])
         return url
 

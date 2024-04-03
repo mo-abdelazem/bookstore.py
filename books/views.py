@@ -1,81 +1,68 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
+
+from books.models import Books
 
 
 # Create your views here.
 
-_books = [
-    {
-        "id": 1,
-        "name": "Iliana Villarreal",
-        "image": "1.jpg",
-        "author": "Dolore in eum facere",
-        "pages": 21,
-        "price": 833,
-    },
-    {
-        "id": 2,
-        "name": "Galena Munoz",
-        "image": "1.jpg",
-        "author": "Facere eveniet et a",
-        "pages": 43,
-        "price": 973,
-    },
-    {
-        "id": 3,
-        "name": "Farrah Mccormick",
-        "image": "1.jpg",
-        "author": "Non in in quia volup",
-        "pages": 56,
-        "price": 539,
-    },
-    {
-        "id": 4,
-        "name": "Howard Clay",
-        "image": "1.jpg",
-        "author": "Omnis ut facere sed ",
-        "pages": 2,
-        "price": 669,
-    },
-    {
-        "id": 41,
-        "name": "Irene Richardson",
-        "image": "1.jpg",
-        "author": "In nostrum ad qui co",
-        "pages": 67,
-        "price": 282,
-    },
-    {
-        "id": 411,
-        "name": "Yardley Thompson",
-        "image": "1.jpg",
-        "author": "Itaque aut ab id per",
-        "pages": 75,
-        "price": 634,
-    },
-    {
-        "id": 4111,
-        "name": "Cadman Rasmussen",
-        "image": "1.jpg",
-        "author": "Occaecat culpa nemo ",
-        "pages": 87,
-        "price": 894,
-    },
-]
-
 
 def books(request):
+    _books = Books.objects.all()
     return render(request, "books/books.html", context={"books": _books})
 
 
 def book(request, id):
-    filtered_books = filter(lambda book: book["id"] == id, _books)
-    filtered_books = list(filtered_books)
-    if filtered_books:
-        _book = filtered_books[0]
-        return render(request, "books/book_detail.html", context={"book": _book})
+    _books = get_object_or_404(Books, pk=id)
+    return render(request, "books/book_detail.html", context={"book": _books})
 
-    return HttpResponse("book not found")
+
+def delete_book(request, id):
+    _books = get_object_or_404(Books, pk=id)
+    _books.delete()
+    url = reverse("books")
+    return redirect(url)
+
+
+def create_book(request):
+    if request.method == "POST":
+        if request.FILES:
+            image = request.FILES["image"]
+        else:
+            image = None
+        print(request.POST)
+        books = Books(
+            name=request.POST["name"],
+            author=request.POST["author"],
+            price=request.POST["price"],
+            page_numbers=request.POST["pages"],
+            image=image,
+        )
+        books.save()
+        return redirect(books.show_url)
+
+    return render(request, "books/create.html")
+
+
+def update_book(request, id):
+    _book = get_object_or_404(Books, pk=id)
+
+    if request.method == "POST":
+        if request.FILES:
+            image = request.FILES["image"]
+        else:
+            image = _book.image
+
+        _book.name = request.POST["name"]
+        _book.author = request.POST["author"]
+        _book.price = request.POST["price"]
+        _book.page_numbers = request.POST["pages"]
+        _book.image = image
+        _book.save()
+
+        return redirect("books.book", id=id)
+
+    return render(request, "books/update.html", {"book": _book})
 
 
 def contactus_us(request):

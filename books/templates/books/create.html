@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %} Add new book {% endblock %}
+
+{% block body %}
+
+<p class="lead">Add New Book</p>
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-6">
+            <label class="form-label" for="book_name">Name</label>
+            <input class="form-control" name="name" id="book_name" type="text">
+        </div>
+        <div class="mb-3 col-6">
+            <label class="form-label" for="book_author">Author</label>
+            <input class="form-control" name="author" id="book_author" type="text">
+        </div>
+        <div class="mb-3 col-6">
+            <label class="form-label" for="book_pages">Pages</label>
+            <input class="form-control" name="pages" id="book_pages" type="number">
+        </div>
+        <div class="mb-3 col-6">
+            <label class="form-label" for="book_price">Price</label>
+            <input class="form-control" name="price" id="book_price" type="number">
+        </div>
+        <div class="mb-3 col">
+            <label class="form-label" for="book_image">Image</label>
+            <input class="form-control" name="image" id="book_image" type="file">
+        </div>
+    </div>
+    <button class="btn btn-primary w-25" type="submit">Add</button>
+</form>
+
+{% endblock %}
