@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-
+from django.contrib.auth.decorators import login_required
 from books.forms import BooksModelForm
 from books.models import Books
 
@@ -19,6 +19,7 @@ def book(request, id):
     return render(request, "books/book_detail.html", context={"book": _books})
 
 
+@login_required
 def delete_book(request, id):
     _books = get_object_or_404(Books, pk=id)
     _books.delete()
@@ -26,6 +27,7 @@ def delete_book(request, id):
     return redirect(url)
 
 
+@login_required
 def create_book(request):
     form = BooksModelForm()
     if request.method == "POST":
@@ -40,6 +42,7 @@ def create_book(request):
     return render(request, "books/create.html", {"form": form})
 
 
+@login_required
 def update_book(request, id):
     _book = get_object_or_404(Books, pk=id)
 

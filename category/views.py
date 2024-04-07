@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.decorators import login_required
+
 from category.forms import CategoryModelForm
 from category.models import Category
 
 
 # Create your views here.
+@login_required
 def create_category(request):
 
     form = CategoryModelForm()
@@ -21,6 +24,7 @@ def category_index(request):
     return render(request, "category/cateogries.html", {"categories": categories})
 
 
+@login_required
 def update_category(request, category_id):
     category = Category.objects.get(pk=category_id)
     form = CategoryModelForm(instance=category)
@@ -32,6 +36,7 @@ def update_category(request, category_id):
     return render(request, "category/update.html", {"form": form})
 
 
+@login_required
 def delete_category(request, category_id):
     category = Category.objects.get(pk=category_id)
     if request.method == "POST":

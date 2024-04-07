@@ -22,4 +22,6 @@ urlpatterns = [
     path("update_category/<int:category_id>/", update_category, name="update_category"),
     path("delete_category/<int:category_id>/", delete_category, name="delete_category"),
     path("show_category/<int:category_id>/", show_category, name="show_category"),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("accounts.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
