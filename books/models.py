@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.shortcuts import reverse
+from category.models import Category
 
 # Create your models here.
 
@@ -15,6 +16,13 @@ class Books(models.Model):
     author = models.CharField(max_length=100, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="all_books",
+    )
 
     def __str__(self):
         return f"{self.name}"

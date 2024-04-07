@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
+from django.urls import reverse_lazy
 
+from books.forms import BooksModelForm
 from books.models import Books
 
 
@@ -25,44 +27,31 @@ def delete_book(request, id):
 
 
 def create_book(request):
+    form = BooksModelForm()
     if request.method == "POST":
-        if request.FILES:
-            image = request.FILES["image"]
+        books = BooksModelForm(request.POST, request.FILES)
+        if books.is_valid():
+            new_book = books.save()
+            return redirect(reverse_lazy("books.book", args=[new_book.id]))
         else:
-            image = None
-        print(request.POST)
-        books = Books(
-            name=request.POST["name"],
-            author=request.POST["author"],
-            price=request.POST["price"],
-            page_numbers=request.POST["pages"],
-            image=image,
-        )
-        books.save()
-        return redirect(books.show_url)
+            # Pass form with errors to template
+            return render(request, "books/create.html", {"form": books})
 
-    return render(request, "books/create.html")
+    return render(request, "books/create.html", {"form": form})
 
 
 def update_book(request, id):
     _book = get_object_or_404(Books, pk=id)
 
     if request.method == "POST":
-        if request.FILES:
-            image = request.FILES["image"]
-        else:
-            image = _book.image
+        form = BooksModelForm(request.POST, request.FILES, instance=_book)
+        if form.is_valid():
+            form.save()
+            return redirect("books.book", id=id)
+    else:
+        form = BooksModelForm(instance=_book)
 
-        _book.name = request.POST["name"]
-        _book.author = request.POST["author"]
-        _book.price = request.POST["price"]
-        _book.page_numbers = request.POST["pages"]
-        _book.image = image
-        _book.save()
-
-        return redirect("books.book", id=id)
-
-    return render(request, "books/update.html", {"book": _book})
+    return render(request, "books/update.html", {"form": form, "book": _book})
 
 
 def contactus_us(request):
