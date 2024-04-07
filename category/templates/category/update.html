@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %} Update Category {% endblock %}
+
+{% block body %}
+
+<p class="lead">Update Category</p>
+
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{form}}
+    <button class="btn btn-primary w-25" type="submit">Update</button>
+</form>
+
+{% endblock %}

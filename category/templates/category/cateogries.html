@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %} Category home page {% endblock%}
+{% block body %}
+
+<table class="table">
+  <tr>
+    <td> ID</td>
+    <td> Name</td>
+
+    <td> Description</td>
+    <td colspan="3"> Action</td>
+  </tr>
+  {% for category in categories %}
+  <tr>
+    <td>{{category.id }}</td>
+    <td> {{category.name}}</td>
+    <td> {{category.description}}</td>
+    <td>
+      <a class="btn btn-primary" href="{% url 'show_category' category.id %}">Show</a>
+    </td>
+
+    <td>
+      <a class="btn btn-info" href="{% url 'update_category' category.id %}"> Edit</a>
+    </td>
+    <td>
+      <a class="btn btn-danger" href="{% url 'delete_category' category.id %}">Delete</a>
+    </td>
+
+
+  </tr>
+  {% endfor %}
+
+</table>
+
+{% endblock %}

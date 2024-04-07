@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %} {{ category.name }} Details {% endblock %}
+
+{% block body %}
+
+<h1>{{ category.name }}</h1>
+<p>Description: {{ category.description }}</p>
+<p>Created at: {{ category.created_at }}</p>
+<p>Updated at: {{ category.updated_at }}</p>
+
+<a class="btn btn-secondary" href="{% url 'category' %}">Back to Categories</a>
+
+{% endblock %}
